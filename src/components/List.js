@@ -2,9 +2,11 @@ import React from 'react';
 import ListItem from './ListItem.js';
 
 function List(props){
-    console.log(props);
-    
-    const listitems = null;
+    const listitems = props.songs.map(item => {
+        return (
+            <ListItem key={item.id} song={item} removeSong={props.removeSong}/>
+        )
+    });
 
     return(
         <ul>
