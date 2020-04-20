@@ -1,8 +1,6 @@
 import React from 'react';
 
 function ListItem(props){
-    console.log(props);
-    
     return (
     <li className="list-item">
         <span>{props.song.song}</span>
