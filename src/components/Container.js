@@ -1,15 +1,18 @@
 import React from 'react';
 import SongForm from './SongForm.js';
 import List from './List.js';
+import Filter from './Filter.js';
 
 class Container extends React.Component{
     constructor(){
         super();
         this.state = {
             songs: [
-                {id: 1, song: "song", artist: "artist", genre: "genre", rating: "2"},
-                {id: 2, song: "song2", artist: "artist2", genre: "genre2", rating: "4"}
-            ]
+                {id: 1, song: "song", artist: "artist", genre: "Rock", rating: "2"},
+                {id: 2, song: "song2", artist: "artist2", genre: "Metal", rating: "4"}
+            ],
+            filteredList : [],
+            filterActive: false
         }
     }
 
@@ -39,20 +42,62 @@ class Container extends React.Component{
         event.preventDefault();
         const parentnode = event.target.parentNode;
         const oldState = this.state.songs;
+        const oldFiltered = this.state.filteredList;
         const newState = oldState.filter(item => {
             return item.song !== parentnode.children[0].innerHTML;
         })
+        const newFiltered = oldFiltered.filter(item => {
+            return item.song !== parentnode.children[0].innerHTML;
+        })
         this.setState({
-            songs: newState
+            songs: newState,
+            filteredList: newFiltered 
         })
     }
+
+    filterSongs = (event) => {
+
+        const unfilteredState = this.state.songs;
+        const filterBy = event.target.value;
+        if(event.target.value !== "All")
+        {
+            if(event.target.name === "select-filter-genre"){
+                const filteredState = unfilteredState.filter(item => {
+                    console.log(item);
+                    return item.genre === filterBy;
+                })
+                this.setState({
+                    filteredList: filteredState,
+                    filterActive: true
+                })
+            }
+            else {
+                console.log('filter by rating');
+                const filteredState = unfilteredState.filter(item => {
+                    return item.rating === filterBy;
+                })
+                this.setState({
+                    filteredList: filteredState,
+                    filterActive: true
+                })
+            }
+        }
+        else{
+            this.setState({
+                filteredList: [],
+                filterActive: false
+            })
+        }
+    }
+
+
 
     render() {
         return (
             <div>
                 <SongForm addSong={this.addSong}/>
-                
-                <List songs={this.state.songs} removeSong={this.removeSong}/>
+                <Filter filterSongs={this.filterSongs}/>
+                <List songs={this.state.filterActive? this.state.filteredList : this.state.songs} removeSong={this.removeSong}/>
             </div>
         )
     }
