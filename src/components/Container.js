@@ -7,7 +7,8 @@ class Container extends React.Component{
         super();
         this.state = {
             songs: [
-                {id: 1, song: "song", artist: "artist", genre: "genre", rating: 2}
+                {id: 1, song: "song", artist: "artist", genre: "genre", rating: "2"},
+                {id: 2, song: "song2", artist: "artist2", genre: "genre2", rating: "4"}
             ]
         }
     }
@@ -31,17 +32,26 @@ class Container extends React.Component{
         })
     }
 
+    /**
+     * functions that removes a song from the lost by selecting the songtext from the parentnode and filtering it out from the rest of the state
+     */
     removeSong = (event) => {
         event.preventDefault();
-        console.log(event);
-        
+        const parentnode = event.target.parentNode;
+        const oldState = this.state.songs;
+        const newState = oldState.filter(item => {
+            return item.song !== parentnode.children[0].innerHTML;
+        })
+        this.setState({
+            songs: newState
+        })
     }
 
     render() {
         return (
             <div>
                 <SongForm addSong={this.addSong}/>
-
+                
                 <List songs={this.state.songs} removeSong={this.removeSong}/>
             </div>
         )
